@@ -7,8 +7,9 @@ import axios from 'axios';
 axios
 .get("https://api.github.com/users/Bobby-Tav")
 .then( res =>{
-  console.log(res)
+  console.log("my Data: ",res)
 })
+
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
     github info! You will need to understand the structure of this
@@ -33,7 +34,6 @@ axios
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -63,3 +63,72 @@ const followersArray = [];
     luishrd
     bigknell
 */
+
+const cardHolder = document.querySelector('div.cards');
+
+function cardMaker(obj){
+  //Elements
+  const card = document.createElement('div');
+  const profileImg = document.createElement('img');
+  const cardInfo = document.createElement('div');
+  const cardName = document.createElement('h3');
+  const userName = document.createElement('p');
+  const loc = document.createElement('p');
+  const profileAdd = document.createElement('p');
+  const profileLink = document.createElement('a');
+  const follower = document.createElement('p');
+  const followings = document.createElement('p');
+  const cardBio = document.createElement('p');
+  
+
+  //Class
+  card.classList.add('card');
+  cardInfo.classList.add("card-info");
+  cardName.classList.add('name');
+  userName.classList.add('username');
+
+  profileImg.src = obj.avatar_url;
+  cardName.textContent = obj.name;
+  userName.textContent = obj.login;
+  loc.textContent = "Location:" + obj.location;
+  profileAdd.textContent  = "Profile: ";
+  profileLink.href = obj.html_url;
+  profileLink.textContent = obj.html_url;
+  follower.textContent = "Follower: " + obj.followers;
+  followings.textContent ="Following: " + obj.following;
+  cardBio.textContent = "Bio: " + obj.bio;
+  //events
+
+    //Strt
+  card.appendChild(profileImg);
+  card.appendChild(cardInfo);
+  cardInfo.appendChild(cardName);
+  cardInfo.appendChild(userName);
+  cardInfo.appendChild(loc);
+  cardInfo.appendChild(profileAdd);
+  cardInfo.appendChild(follower);
+  cardInfo.appendChild(followings);
+  cardInfo.appendChild(cardBio);
+  profileAdd.appendChild(profileLink);
+
+  return card;
+}
+
+
+const followersArray = ['Bobby-Tav','tetondan','dustinmyers','justsml','luishrd','bigknell'];
+followersArray.forEach( item =>{
+  axios
+  .get(`https://api.github.com/users/${item}`)
+  .then(res => {
+    // const info = res.data;
+    const cardMake = cardMaker(res.data);
+    cardHolder.appendChild(cardMake);
+    console.log(res.data.name)
+  })
+  .catch(err => {
+    console.log("on no" , err);  
+  })
+  .finally( (item) => console.log("done"))
+  
+})
+
